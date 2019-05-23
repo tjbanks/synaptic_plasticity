@@ -1,0 +1,387 @@
+/////////////////////
+// Model Templates //
+/////////////////////
+
+
+begintemplate IzhiCell_CA3
+
+	public NumSoma
+	NumSoma = 1
+
+	public soma
+	create soma[NumSoma]
+
+	public all, somatic, basal, apical, axonal
+	objref all, somatic, basal, apical, axonal
+	objref this
+
+	public IzhiSoma
+
+	public init
+
+	objref IzhiSoma
+	
+	public setv
+		proc setv() {
+		     forall v = $1
+		   }
+
+	
+	proc init() {
+		/////// topology ////////
+		//create soma[0]
+
+		all = new SectionList()
+		somatic = new SectionList()
+		basal = new SectionList()
+		apical = new SectionList()
+		axonal = new SectionList()
+
+		for i=0,NumSoma soma[i] {
+			all.append()
+			somatic.append()
+			} 
+		
+		/////// geometry ////////
+		soma[0] {nseg=1 L=40 diam=40} // changed L & diam
+	
+		/////// biophysics ///////
+		soma[0] {
+			cm= 1.5		//(microF/cm2)
+			Ra= 210		//(ohm-cm)
+			
+			IzhiSoma = new IZH(0.5)
+		
+			IzhiSoma.k = 0.0015
+			IzhiSoma.vr = -75
+			IzhiSoma.vt = -58
+			IzhiSoma.a = 0.01
+			IzhiSoma.b = .002
+			IzhiSoma.vpeak = 29
+			IzhiSoma.c = -63
+			IzhiSoma.d = 0.06//3.9
+			IzhiSoma.dACH = 0.01
+			IzhiSoma.cACH = 2
+			IzhiSoma.vrACH = 5
+			
+			// IzhiSoma.uinit = u
+		  	}
+	
+			////////////// Burst then tonic - This is another type of pyramidal cells as reported in Brown and Randall 2008
+					// soma {
+			// cm= 1.5		//(microF/cm2)
+			// Ra= 210		//(ohm-cm)
+			// u = 0
+			
+			// IzhiSoma = new IZH(0.5)
+		
+			// IzhiSoma.k = 0.0015
+			// IzhiSoma.vr = -75
+			// IzhiSoma.vt = -58
+			// IzhiSoma.a = 0.004 // from 0.01
+			// IzhiSoma.b = .002
+			// IzhiSoma.vpeak = 29
+			// IzhiSoma.c = -62 // from -63
+			// IzhiSoma.d = 0.05 // from 0.06//3.9
+			// IzhiSoma.dACH = 0.01
+			// IzhiSoma.cACH = 2
+			// IzhiSoma.vrACH = 5
+			
+			// IzhiSoma.uinit = u
+		  	// }
+			
+			
+			//////////////// With burst and silence -This is another type of pyramidal cells as reported in Brown and Randall 2008
+								// soma {
+			// cm= 1.5		//(microF/cm2)
+			// Ra= 210		//(ohm-cm)
+			// u = 0
+			
+			// IzhiSoma = new IZH(0.5)
+		
+			// IzhiSoma.k = 0.0021
+			// IzhiSoma.vr = -75
+			// IzhiSoma.vt = -58
+			// IzhiSoma.a = 0.003 // from 0.01
+			// IzhiSoma.b = .002
+			// IzhiSoma.vpeak = 29
+			// IzhiSoma.c = -60 // from -63
+			// IzhiSoma.d = 0.03 // from 0.06//3.9
+			// IzhiSoma.dACH = 0.01
+			// IzhiSoma.cACH = 2
+			// IzhiSoma.vrACH = 5
+			
+			// IzhiSoma.uinit = u
+		  	// }
+		define_shape()
+
+	}
+		public setu
+	proc setu() {
+	forall u = $1
+	IzhiSoma.uinit = $1
+	}
+	
+endtemplate IzhiCell_CA3
+
+////////////////////////////////////////////////////////////////
+/////////////////////////////////GC////////////////////////////
+begintemplate IzhiCell_GC
+	public NumSoma
+	NumSoma = 1
+
+	public soma
+	create soma[NumSoma]
+
+	public all, somatic, basal, apical, axonal
+	objref all, somatic, basal, apical, axonal
+	objref this
+
+	public IzhiSoma
+
+	public init
+	
+	objref IzhiSoma
+	public setv
+	proc setv() {
+	forall v = $1
+	}
+	proc init() {
+		all = new SectionList()
+		somatic = new SectionList()
+		basal = new SectionList()
+		apical = new SectionList()
+		axonal = new SectionList()
+
+		for i=0,NumSoma soma[i] {
+			all.append()
+			somatic.append()
+			} 
+		/////// topology ////////
+		//create soma
+		
+		/////// geometry ////////
+		soma[0] {nseg=1 L=40 diam=40} // changed L & diam
+			
+		
+		/////// biophysics ///////
+		soma[0] {
+			cm= 1.5//12		//(microF/cm2)
+			Ra= 210		//(ohm-cm)
+	
+			IzhiSoma = new IZH(0.5)
+			
+			IzhiSoma.k = 0.001
+			IzhiSoma.vr = -73
+			IzhiSoma.vt = -53
+			IzhiSoma.a = 0.015
+			IzhiSoma.b = .003
+			IzhiSoma.vpeak = 32
+			IzhiSoma.c = -62
+			IzhiSoma.d = 0.003
+			  IzhiSoma.dACH = 0.001
+			  IzhiSoma.cACH = 12 
+			  IzhiSoma.vrACH = 1 
+		  	}
+
+			define_shape()
+
+	}
+
+endtemplate IzhiCell_GC
+
+////////////////////////////////////////////////////////////////
+/////////////////////////////////EC////////////////////////////
+begintemplate IzhiCell_EC
+	public NumSoma
+	NumSoma = 1
+
+	public soma
+	create soma[NumSoma]
+
+	public all, somatic, basal, apical, axonal
+	objref all, somatic, basal, apical, axonal
+	objref this
+
+	public IzhiSoma
+
+	public init, id
+	
+
+	objref IzhiSoma
+	public setv
+	proc setv() {
+	forall v = $1
+	}
+	proc init() {
+		all = new SectionList()
+		somatic = new SectionList()
+		basal = new SectionList()
+		apical = new SectionList()
+		axonal = new SectionList()
+
+		for i=0,NumSoma soma[i] {
+			all.append()
+			somatic.append()
+			} 
+		/////// topology ////////
+		//create soma
+		
+		/////// geometry ////////
+		soma[0] {nseg=1 L=40 diam=40} // changed L & diam
+			
+		
+		/////// biophysics ///////
+		soma[0] {
+			cm= 1//12		//(microF/cm2)
+			Ra= 210		//(ohm-cm)
+	
+			IzhiSoma = new IZH(0.5)
+			
+			IzhiSoma.k = 0.0008
+			IzhiSoma.vr = -64
+			IzhiSoma.vt = -55
+			IzhiSoma.a = 0.08
+			IzhiSoma.b = .014
+			IzhiSoma.vpeak = 40
+			IzhiSoma.c = -50
+			IzhiSoma.d = 0.6
+
+		  	}
+		define_shape()
+
+	}
+
+endtemplate IzhiCell_EC
+
+////////////////////////////////////////////////////////////////
+/////////////////////////////////OLM////////////////////////////
+begintemplate IzhiCell_OLM
+	public NumSoma
+	NumSoma = 1
+
+	public soma
+	create soma[NumSoma]
+
+	public all, somatic, basal, apical, axonal
+	objref all, somatic, basal, apical, axonal
+	objref this
+
+	public IzhiSoma
+
+	objref IzhiSoma
+
+	public setv
+	proc setv() {
+	forall v = $1
+	}
+	
+	proc init() {
+		all = new SectionList()
+		somatic = new SectionList()
+		basal = new SectionList()
+		apical = new SectionList()
+		axonal = new SectionList()
+
+		for i=0,NumSoma soma[i] {
+			all.append()
+			somatic.append()
+			} 
+		/////// topology ////////
+		//create soma
+		
+		/////// geometry ////////
+		soma[0] {nseg=1 L=40 diam=40} //0.004cm 16e-6 * 5 = 80e-6 microF = 80pF
+		/////// biophysics ///////
+		soma[0] {
+			cm= 5//12		//(microF/cm2)
+			Ra= 210		//(ohm-cm)
+
+			IzhiSoma = new IZH(0.5)
+	
+			IzhiSoma.k = 0.0015
+			IzhiSoma.vr = -68 // taken from the first cell in Ali AB, Thomson AM (1998)
+			IzhiSoma.vt = -53 // Estimated from graph in Ali AB, Thomson AM (1998)
+			IzhiSoma.a = 0.0031
+			IzhiSoma.b = .01
+			IzhiSoma.vpeak = 30 
+			IzhiSoma.c = -65
+			IzhiSoma.d = 0.03
+			
+			IzhiSoma.vrACH = 3
+			IzhiSoma.ACHshutdown = 1
+			// IzhiSoma.peakFactor = 30
+			// IzhiSoma.cFactor = 10
+
+		  	}
+
+		define_shape()
+	}
+
+	
+endtemplate IzhiCell_OLM
+
+////////////////////////////////////////////////////////////////
+/////////////////////////////////Basket//////////////////////////
+
+begintemplate IzhiCell_BC
+	public NumSoma
+	NumSoma = 1
+
+	public soma
+	create soma[NumSoma]
+
+	public all, somatic, basal, apical, axonal
+	objref all, somatic, basal, apical, axonal
+	objref this
+
+	public IzhiSoma
+	objref IzhiSoma
+
+	public setv
+	proc setv() {
+	forall v = $1
+	}
+	
+	proc init() {
+		all = new SectionList()
+		somatic = new SectionList()
+		basal = new SectionList()
+		apical = new SectionList()
+		axonal = new SectionList()
+
+		for i=0,NumSoma soma[i] {
+			all.append()
+			somatic.append()
+			} 
+		/////// topology ////////
+		//create soma
+		
+		/////// geometry ////////
+		soma[0] {nseg=1 L=40 diam=40} // changed L & diam
+					
+		/////// biophysics ///////
+		soma[0] {
+			cm= 1.4//12		//(microF/cm2)
+			Ra= 210		//(ohm-cm)
+
+			IzhiSoma = new IZH(0.5)
+	
+			IzhiSoma.k = 0.0015
+			IzhiSoma.vr = -65
+			IzhiSoma.vt = -50
+			IzhiSoma.a = 0.9  
+			IzhiSoma.b = .002
+			IzhiSoma.vpeak = 28
+			IzhiSoma.c = -80
+			IzhiSoma.d = 0.4
+			IzhiSoma.vrACH = 2
+
+		  	}
+		define_shape()
+
+	}
+
+	
+endtemplate IzhiCell_BC
+
