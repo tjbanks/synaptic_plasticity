@@ -2,7 +2,7 @@
   "manifest": {
     "$BASE_DIR": ".",
     "$COMPONENTS_DIR": "$BASE_DIR/biophys_components",
-    "$NETWORK_DIR": "$BASE_DIR\\network"
+    "$NETWORK_DIR": "$BASE_DIR/network"
   },
   "components": {
     "morphologies_dir": "$COMPONENTS_DIR/morphologies",
@@ -15,10 +15,23 @@
   "networks": {
     "nodes": [
       {
-        "node_file": "$NETWORK_DIR/CA3_nodes.h5",
+        "nodes_file": "$NETWORK_DIR/CA3_nodes.h5",
         "node_types_file": "$NETWORK_DIR/CA3_node_types.csv"
+      },
+      {
+        "nodes_file": "$NETWORK_DIR/input_nodes.h5",
+        "node_types_file": "$NETWORK_DIR/input_node_types.csv"
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "edges_file": "$NETWORK_DIR/CA3_CA3_edges.h5",
+        "edge_types_file": "$NETWORK_DIR/CA3_CA3_edge_types.csv" 
+      },
+      {
+        "edges_file": "$NETWORK_DIR/input_CA3_edges.h5",
+        "edge_types_file": "$NETWORK_DIR/input_CA3_edge_types.csv" 
+      }
+    ]
   }
 }

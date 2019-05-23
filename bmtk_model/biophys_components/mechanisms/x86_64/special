@@ -10,4 +10,4 @@ if test "" = "yes" ; then
 else
 	NRNIV="${NRNBIN}nrniv"
 fi
-"${NRNIV}" -dll "/home/tbg28/git_stage/hippocampus-bmtk/HummosBanks-bmtk/biophys_components/mechanisms/x86_64/.libs/libnrnmech.so" "$@"
+"${NRNIV}" -dll "/home/tbg28/git_stage/synaptic_plasticity/bmtk_model/biophys_components/mechanisms/x86_64/.libs/libnrnmech.so" "$@"

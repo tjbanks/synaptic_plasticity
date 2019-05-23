@@ -1,1 +1,1 @@
-.././modfiles//pyr2pyr.mod
+../modfiles//pyr2pyr.mod

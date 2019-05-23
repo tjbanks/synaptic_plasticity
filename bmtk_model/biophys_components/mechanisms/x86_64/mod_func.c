@@ -12,10 +12,10 @@ void modl_reg(){
   if (!nrn_nobanner_) if (nrnmpi_myid < 1) {
     fprintf(stderr, "Additional mechanisms from files\n");
 
-    fprintf(stderr," ./modfiles//izh.mod");
-    fprintf(stderr," ./modfiles//pyr2pyr.mod");
-    fprintf(stderr," ./modfiles//synapse_inter2pyr.mod");
-    fprintf(stderr," ./modfiles//vecevent.mod");
+    fprintf(stderr," modfiles//izh.mod");
+    fprintf(stderr," modfiles//pyr2pyr.mod");
+    fprintf(stderr," modfiles//synapse_inter2pyr.mod");
+    fprintf(stderr," modfiles//vecevent.mod");
     fprintf(stderr, "\n");
   }
   _izh_reg();

@@ -6,6 +6,10 @@ import os, sys
 from bmtk.simulator import bionet
 from bmtk.simulator.bionet.default_setters.cell_models import loadHOC
 
+import synapses
+
+synapses.load()
+
 bionet.pyfunction_cache.add_cell_model(loadHOC, directive='hoc', model_type='biophysical')
 
 def run(config_file):
@@ -23,4 +27,4 @@ if __name__ == '__main__':
     if __file__ != sys.argv[-1]:
         run(sys.argv[-1])
     else:
-        run('config.json')
+        run('simulation_config.json')

@@ -425,7 +425,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 pyr2pyr /home/tbg28/git_stage/hippocampus-bmtk/HummosBanks-bmtk/biophys_components/mechanisms/x86_64/pyr2pyr.mod\n");
+ 	ivoc_help("help ?1 pyr2pyr /home/tbg28/git_stage/synaptic_plasticity/bmtk_model/biophys_components/mechanisms/x86_64/pyr2pyr.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

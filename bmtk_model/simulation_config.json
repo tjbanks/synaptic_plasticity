@@ -1,13 +1,14 @@
 {
   "manifest": {
     "$BASE_DIR": ".",
-    "$OUTPUT_DIR": "$BASE_DIR/output"
+    "$OUTPUT_DIR": "$BASE_DIR/output",
+    "$INPUT_DIR": "$BASE_DIR/input"
   },
   "target_simulator": "NEURON",
   "run": {
     "tstop": 1000.0,
-    "dt": 0.001,
-    "dL": 20.0,
+    "dt": 0.1,
+    "dL": 2000.0,
     "spike_threshold": -15.0,
     "nsteps_block": 5000
   },
@@ -15,7 +16,22 @@
     "celsius": 34.0,
     "v_init": -80.0
   },
-  "inputs": {},
+  "node_sets": {
+    "virt_CA3": {
+      "model_type": "virtual"
+    },
+    "CA3e": {
+      "pop_name":"CA3e"
+    }
+  },
+  "inputs": {
+    "spikes_CA3e":{
+      "input_type":"spikes",
+      "module":"csv",
+      "input_file":"$INPUT_DIR/input_spikes.csv",
+      "node_set":"input"
+    }
+  },
   "output": {
     "log_file": "log.txt",
     "output_dir": "${OUTPUT_DIR}",
@@ -24,9 +40,16 @@
     "overwrite_output_dir": true
   },
   "reports": {
+    "membrane_report":{
+      "module":"membrane_report",
+      "cells":"CA3e",
+      "variable_name":["v"],
+      "file_name":"cell_vars.h5",
+      "sections":"soma"
+    },
     "syn_report": {
-      "cells": [0],
-      "variable_name": "i",
+      "cells": "CA3e",
+      "variable_name": "W_ampa",
       "module": "netcon_report",
       "sections": "all",
       "syn_type": "pyr2pyr"

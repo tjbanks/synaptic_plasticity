@@ -1,0 +1,88 @@
+{
+  "target_simulator": "NEURON",
+  "run": {
+    "tstop": 1000.0,
+    "dt": 0.1,
+    "dL": 2000.0,
+    "spike_threshold": -15.0,
+    "nsteps_block": 5000
+  },
+  "conditions": {
+    "celsius": 34.0,
+    "v_init": -80.0
+  },
+  "node_sets": {
+    "virt_CA3": {
+      "model_type": "virtual"
+    },
+    "CA3e": {
+      "pop_name": "CA3e"
+    }
+  },
+  "inputs": {
+    "spikes_CA3e": {
+      "input_type": "spikes",
+      "module": "csv",
+      "input_file": "./input/input_spikes.csv",
+      "node_set": "input"
+    }
+  },
+  "output": {
+    "log_file": "log.txt",
+    "output_dir": "./output",
+    "spikes_file": "spikes.h5",
+    "spikes_file_csv": "spikes.csv",
+    "overwrite_output_dir": true
+  },
+  "reports": {
+    "membrane_report": {
+      "module": "membrane_report",
+      "cells": "CA3e",
+      "variable_name": [
+        "v"
+      ],
+      "file_name": "cell_vars.h5",
+      "sections": "soma"
+    },
+    "syn_report": {
+      "cells": "CA3e",
+      "variable_name": "W_ampa",
+      "module": "netcon_report",
+      "sections": "all",
+      "syn_type": "pyr2pyr"
+    }
+  },
+  "network": "./circuit_config.json",
+  "config_path": "/home/tbg28/git_stage/synaptic_plasticity/bmtk_model/simulation_config.json",
+  "config_dir": "/home/tbg28/git_stage/synaptic_plasticity/bmtk_model",
+  "components": {
+    "morphologies_dir": "./biophys_components/morphologies",
+    "synaptic_models_dir": "./biophys_components/synaptic_models",
+    "mechanisms_dir": "./biophys_components/mechanisms",
+    "biophysical_neuron_models_dir": "./biophys_components/biophysical_neuron_templates",
+    "point_neuron_models_dir": "./biophys_components/point_neuron_templates",
+    "templates_dir": "./biophys_components/hoc_templates"
+  },
+  "networks": {
+    "nodes": [
+      {
+        "nodes_file": "./network/CA3_nodes.h5",
+        "node_types_file": "./network/CA3_node_types.csv"
+      },
+      {
+        "nodes_file": "./network/input_nodes.h5",
+        "node_types_file": "./network/input_node_types.csv"
+      }
+    ],
+    "edges": [
+      {
+        "edges_file": "./network/CA3_CA3_edges.h5",
+        "edge_types_file": "./network/CA3_CA3_edge_types.csv"
+      },
+      {
+        "edges_file": "./network/input_CA3_edges.h5",
+        "edge_types_file": "./network/input_CA3_edge_types.csv"
+      }
+    ]
+  }
+}

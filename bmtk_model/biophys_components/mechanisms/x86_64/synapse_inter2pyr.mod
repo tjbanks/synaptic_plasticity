@@ -1,1 +1,1 @@
-.././modfiles//synapse_inter2pyr.mod
+../modfiles//synapse_inter2pyr.mod
