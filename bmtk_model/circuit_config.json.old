@@ -25,6 +25,10 @@
     ],
     "edges": [
       {
+        "edges_file": "$NETWORK_DIR/CA3_CA3_edges.h5",
+        "edge_types_file": "$NETWORK_DIR/CA3_CA3_edge_types.csv" 
+      },
+      {
         "edges_file": "$NETWORK_DIR/input_CA3_edges.h5",
         "edge_types_file": "$NETWORK_DIR/input_CA3_edge_types.csv" 
       }

@@ -48,8 +48,8 @@
       "sections":"soma"
     },
     "syn_report": {
-      "cells": "CA3e",
-      "variable_name": "W_ampa",
+      "cells": "virt_CA3",
+      "variable_name": "i_ampa",
       "module": "netcon_report",
       "sections": "all",
       "syn_type": "pyr2pyr"

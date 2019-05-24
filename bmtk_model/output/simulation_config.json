@@ -45,8 +45,8 @@
       "sections": "soma"
     },
     "syn_report": {
-      "cells": "CA3e",
-      "variable_name": "W_ampa",
+      "cells": "virt_CA3",
+      "variable_name": "i_ampa",
       "module": "netcon_report",
       "sections": "all",
       "syn_type": "pyr2pyr"
@@ -75,10 +75,6 @@
       }
     ],
     "edges": [
-      {
-        "edges_file": "./network/CA3_CA3_edges.h5",
-        "edge_types_file": "./network/CA3_CA3_edge_types.csv"
-      },
       {
         "edges_file": "./network/input_CA3_edges.h5",
         "edge_types_file": "./network/input_CA3_edge_types.csv"
