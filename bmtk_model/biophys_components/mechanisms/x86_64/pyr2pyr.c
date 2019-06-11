@@ -29,7 +29,6 @@ extern double hoc_Exp(double);
 #define nrn_jacob _nrn_jacob__pyr2pyr
 #define nrn_state _nrn_state__pyr2pyr
 #define _net_receive _net_receive__pyr2pyr 
-#define release release__pyr2pyr 
  
 #define _threadargscomma_ _p, _ppvar, _thread, _nt,
 #define _threadargsprotocomma_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt,
@@ -235,7 +234,6 @@ extern Memb_func* memb_func;
  0,0
 };
  static double Capoolcon0 = 0;
- static double delta_t = 0.01;
  static double r_ampa0 = 0;
  static double r_nmda0 = 0;
  /* connect global user variables to hoc */
@@ -257,14 +255,6 @@ static void  nrn_jacob(_NrnThread*, _Memb_list*, int);
  static void _hoc_destroy_pnt(_vptr) void* _vptr; {
    destroy_point_process(_vptr);
 }
- 
-static int _ode_count(int);
-static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
-static void _ode_spec(_NrnThread*, _Memb_list*, int);
-static void _ode_matsol(_NrnThread*, _Memb_list*, int);
- 
-#define _cvode_ieq _ppvar[2]._i
- static void _ode_matsol_instance1(_threadargsproto_);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
@@ -388,18 +378,13 @@ static void nrn_alloc(Prop* _prop) {
  	_prop->param = _p;
  	_prop->param_size = 72;
   if (!nrn_point_prop_) {
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 3, _prop);
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 2, _prop);
   }
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  
 }
  static void _initlists();
-  /* some states have an absolute tolerance */
- static Symbol** _atollist;
- static HocStateTolerance _hoc_state_tol[] = {
- 0,0
-};
  static void _net_receive(Point_process*, double*, double);
  extern Symbol* hoc_lookup(const char*);
 extern void _nrn_thread_reg(int, int, void(*)(Datum*));
@@ -416,12 +401,9 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_prop_size(_mechtype, 72, 3);
+  hoc_register_prop_size(_mechtype, 72, 2);
   hoc_register_dparam_semantics(_mechtype, 0, "area");
   hoc_register_dparam_semantics(_mechtype, 1, "pntproc");
-  hoc_register_dparam_semantics(_mechtype, 2, "cvodeieq");
- 	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
- 	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
@@ -439,160 +421,6 @@ static int _ninits = 0;
 static int _match_recurse=1;
 static void _modl_cleanup(){ _match_recurse=1;}
  
-static int _ode_spec1(_threadargsproto_);
-/*static int _ode_matsol1(_threadargsproto_);*/
- static int _slist1[3], _dlist1[3];
- static int release(_threadargsproto_);
- 
-/*CVODE*/
- static int _ode_spec1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset = 0; {
-   if ( t0 > 0.0 ) {
-     if ( t - t0 < Cdur_nmda ) {
-       on_nmda = 1.0 ;
-       }
-     else {
-       on_nmda = 0.0 ;
-       }
-     if ( t - t0 < Cdur_ampa ) {
-       on_ampa = 1.0 ;
-       }
-     else {
-       on_ampa = 0.0 ;
-       }
-     }
-   Dr_nmda = AlphaTmax_nmda * on_nmda * ( 1.0 - r_nmda ) - Beta_nmda * r_nmda ;
-   Dr_ampa = AlphaTmax_ampa * on_ampa * ( 1.0 - r_ampa ) - Beta_ampa * r_ampa ;
-   dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * dt ;
-   if ( fabs ( dW_ampa ) > maxChange ) {
-     if ( dW_ampa < 0.0 ) {
-       dW_ampa = - 1.0 * maxChange ;
-       }
-     else {
-       dW_ampa = maxChange ;
-       }
-     }
-   normW = ( W_ampa - Wmin ) / ( Wmax - Wmin ) ;
-   if ( dW_ampa < 0.0 ) {
-     scaleW = sqrt ( fabs ( normW ) ) ;
-     }
-   else {
-     scaleW = sqrt ( fabs ( 1.0 - normW ) ) ;
-     }
-   W_ampa = W_ampa + dW_ampa * scaleW * ( 1.0 + ( wACH * ( ACH - 1.0 ) ) ) * LearningShutDown ;
-   if ( W_ampa > Wmax ) {
-     W_ampa = Wmax ;
-     }
-   else if ( W_ampa < Wmin ) {
-     W_ampa = Wmin ;
-     }
-   g_nmda = gbar_nmda * r_nmda * facfactor ;
-   i_nmda = W_nmda * g_nmda * ( v - Erev_nmda ) * sfunc ( _threadargscomma_ v ) ;
-   g_ampa = gbar_ampa * r_ampa * facfactor ;
-   i_ampa = W_ampa * g_ampa * ( v - Erev_ampa ) * ( 1.0 + ( bACH * ( ACH - 1.0 ) ) ) * ( aDA + ( bDA * ( DA - 1.0 ) ) ) ;
-   ICa = P0 * g_nmda * ( v - ECa ) * sfunc ( _threadargscomma_ v ) ;
-   DCapoolcon = - fCa * Afactor * ICa + ( Cainf - Capoolcon ) / tauCa ;
-   }
- return _reset;
-}
- static int _ode_matsol1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
- if ( t0 > 0.0 ) {
-   if ( t - t0 < Cdur_nmda ) {
-     on_nmda = 1.0 ;
-     }
-   else {
-     on_nmda = 0.0 ;
-     }
-   if ( t - t0 < Cdur_ampa ) {
-     on_ampa = 1.0 ;
-     }
-   else {
-     on_ampa = 0.0 ;
-     }
-   }
- Dr_nmda = Dr_nmda  / (1. - dt*( ( AlphaTmax_nmda * on_nmda )*( ( ( - 1.0 ) ) ) - ( Beta_nmda )*( 1.0 ) )) ;
- Dr_ampa = Dr_ampa  / (1. - dt*( ( AlphaTmax_ampa * on_ampa )*( ( ( - 1.0 ) ) ) - ( Beta_ampa )*( 1.0 ) )) ;
- dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * dt ;
- if ( fabs ( dW_ampa ) > maxChange ) {
-   if ( dW_ampa < 0.0 ) {
-     dW_ampa = - 1.0 * maxChange ;
-     }
-   else {
-     dW_ampa = maxChange ;
-     }
-   }
- normW = ( W_ampa - Wmin ) / ( Wmax - Wmin ) ;
- if ( dW_ampa < 0.0 ) {
-   scaleW = sqrt ( fabs ( normW ) ) ;
-   }
- else {
-   scaleW = sqrt ( fabs ( 1.0 - normW ) ) ;
-   }
- W_ampa = W_ampa + dW_ampa * scaleW * ( 1.0 + ( wACH * ( ACH - 1.0 ) ) ) * LearningShutDown ;
- if ( W_ampa > Wmax ) {
-   W_ampa = Wmax ;
-   }
- else if ( W_ampa < Wmin ) {
-   W_ampa = Wmin ;
-   }
- g_nmda = gbar_nmda * r_nmda * facfactor ;
- i_nmda = W_nmda * g_nmda * ( v - Erev_nmda ) * sfunc ( _threadargscomma_ v ) ;
- g_ampa = gbar_ampa * r_ampa * facfactor ;
- i_ampa = W_ampa * g_ampa * ( v - Erev_ampa ) * ( 1.0 + ( bACH * ( ACH - 1.0 ) ) ) * ( aDA + ( bDA * ( DA - 1.0 ) ) ) ;
- ICa = P0 * g_nmda * ( v - ECa ) * sfunc ( _threadargscomma_ v ) ;
- DCapoolcon = DCapoolcon  / (1. - dt*( ( ( ( - 1.0 ) ) ) / tauCa )) ;
- return 0;
-}
- /*END CVODE*/
- static int release (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) { {
-   if ( t0 > 0.0 ) {
-     if ( t - t0 < Cdur_nmda ) {
-       on_nmda = 1.0 ;
-       }
-     else {
-       on_nmda = 0.0 ;
-       }
-     if ( t - t0 < Cdur_ampa ) {
-       on_ampa = 1.0 ;
-       }
-     else {
-       on_ampa = 0.0 ;
-       }
-     }
-    r_nmda = r_nmda + (1. - exp(dt*(( AlphaTmax_nmda * on_nmda )*( ( ( - 1.0 ) ) ) - ( Beta_nmda )*( 1.0 ))))*(- ( ( ( AlphaTmax_nmda )*( on_nmda ) )*( ( 1.0 ) ) ) / ( ( ( AlphaTmax_nmda )*( on_nmda ) )*( ( ( - 1.0 ) ) ) - ( Beta_nmda )*( 1.0 ) ) - r_nmda) ;
-    r_ampa = r_ampa + (1. - exp(dt*(( AlphaTmax_ampa * on_ampa )*( ( ( - 1.0 ) ) ) - ( Beta_ampa )*( 1.0 ))))*(- ( ( ( AlphaTmax_ampa )*( on_ampa ) )*( ( 1.0 ) ) ) / ( ( ( AlphaTmax_ampa )*( on_ampa ) )*( ( ( - 1.0 ) ) ) - ( Beta_ampa )*( 1.0 ) ) - r_ampa) ;
-   dW_ampa = eta ( _threadargscomma_ Capoolcon ) * ( lambda1 * omega ( _threadargscomma_ Capoolcon , threshold1 , threshold2 ) - lambda2 * W_ampa ) * dt ;
-   if ( fabs ( dW_ampa ) > maxChange ) {
-     if ( dW_ampa < 0.0 ) {
-       dW_ampa = - 1.0 * maxChange ;
-       }
-     else {
-       dW_ampa = maxChange ;
-       }
-     }
-   normW = ( W_ampa - Wmin ) / ( Wmax - Wmin ) ;
-   if ( dW_ampa < 0.0 ) {
-     scaleW = sqrt ( fabs ( normW ) ) ;
-     }
-   else {
-     scaleW = sqrt ( fabs ( 1.0 - normW ) ) ;
-     }
-   W_ampa = W_ampa + dW_ampa * scaleW * ( 1.0 + ( wACH * ( ACH - 1.0 ) ) ) * LearningShutDown ;
-   if ( W_ampa > Wmax ) {
-     W_ampa = Wmax ;
-     }
-   else if ( W_ampa < Wmin ) {
-     W_ampa = Wmin ;
-     }
-   g_nmda = gbar_nmda * r_nmda * facfactor ;
-   i_nmda = W_nmda * g_nmda * ( v - Erev_nmda ) * sfunc ( _threadargscomma_ v ) ;
-   g_ampa = gbar_ampa * r_ampa * facfactor ;
-   i_ampa = W_ampa * g_ampa * ( v - Erev_ampa ) * ( 1.0 + ( bACH * ( ACH - 1.0 ) ) ) * ( aDA + ( bDA * ( DA - 1.0 ) ) ) ;
-   ICa = P0 * g_nmda * ( v - ECa ) * sfunc ( _threadargscomma_ v ) ;
-    Capoolcon = Capoolcon + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / tauCa)))*(- ( ( ( - fCa )*( Afactor ) )*( ICa ) + ( ( Cainf ) ) / tauCa ) / ( ( ( ( - 1.0 ) ) ) / tauCa ) - Capoolcon) ;
-   }
-  return 0;
-}
- 
 static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _args; double _lflag; 
 {  double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
    _thread = (Datum*)0; _nt = (_NrnThread*)_pnt->_vnt;   _p = _pnt->_prop->param; _ppvar = _pnt->_prop->dparam;
@@ -603,7 +431,7 @@ static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _arg
    D1 = 1.0 - ( 1.0 - D1 ) * exp ( - ( t - tsyn ) / tauD1 ) ;
    D2 = 1.0 - ( 1.0 - D2 ) * exp ( - ( t - tsyn ) / tauD2 ) ;
    tsyn = t ;
-   facfactor = F * D1 * D2 ;
+   facfactor = F * D1 * D2 * _args[0] ;
    F = F * f ;
    if ( F > 30.0 ) {
      F = 30.0 ;
@@ -683,46 +511,6 @@ static double _hoc_omega(void* _vptr) {
  _r =  omega ( _p, _ppvar, _thread, _nt, *getarg(1) , *getarg(2) , *getarg(3) );
  return(_r);
 }
- 
-static int _ode_count(int _type){ return 3;}
- 
-static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-   double* _p; Datum* _ppvar; Datum* _thread;
-   Node* _nd; double _v; int _iml, _cntml;
-  _cntml = _ml->_nodecount;
-  _thread = _ml->_thread;
-  for (_iml = 0; _iml < _cntml; ++_iml) {
-    _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
-    _nd = _ml->_nodelist[_iml];
-    v = NODEV(_nd);
-     _ode_spec1 (_p, _ppvar, _thread, _nt);
- }}
- 
-static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
-	double* _p; Datum* _ppvar;
- 	int _i; _p = _pp; _ppvar = _ppd;
-	_cvode_ieq = _ieq;
-	for (_i=0; _i < 3; ++_i) {
-		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
-		_cvode_abstol(_atollist, _atol, _i);
-	}
- }
- 
-static void _ode_matsol_instance1(_threadargsproto_) {
- _ode_matsol1 (_p, _ppvar, _thread, _nt);
- }
- 
-static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-   double* _p; Datum* _ppvar; Datum* _thread;
-   Node* _nd; double _v; int _iml, _cntml;
-  _cntml = _ml->_nodecount;
-  _thread = _ml->_thread;
-  for (_iml = 0; _iml < _cntml; ++_iml) {
-    _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
-    _nd = _ml->_nodelist[_iml];
-    v = NODEV(_nd);
- _ode_matsol_instance1(_threadargs_);
- }}
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
   int _i; double _save;{
@@ -747,7 +535,7 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
    D1 = 1.0 ;
    D2 = 1.0 ;
    }
- 
+
 }
 }
 
@@ -777,6 +565,8 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 }
 
 static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
+   g_ampa = gbar_ampa * facfactor ;
+   i_ampa = g_ampa * ( v - Erev_ampa ) ;
    }
  _current += i_nmda;
  _current += i_ampa;
@@ -847,29 +637,6 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 }
 
 static void nrn_state(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-double* _p; Datum* _ppvar; Datum* _thread;
-Node *_nd; double _v = 0.0; int* _ni; int _iml, _cntml;
-#if CACHEVEC
-    _ni = _ml->_nodeindices;
-#endif
-_cntml = _ml->_nodecount;
-_thread = _ml->_thread;
-for (_iml = 0; _iml < _cntml; ++_iml) {
- _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
- _nd = _ml->_nodelist[_iml];
-#if CACHEVEC
-  if (use_cachevec) {
-    _v = VEC_V(_ni[_iml]);
-  }else
-#endif
-  {
-    _nd = _ml->_nodelist[_iml];
-    _v = NODEV(_nd);
-  }
- v=_v;
-{
- {   release(_p, _ppvar, _thread, _nt);
-  }}}
 
 }
 
@@ -879,9 +646,6 @@ static void _initlists(){
  double _x; double* _p = &_x;
  int _i; static int _first = 1;
   if (!_first) return;
- _slist1[0] = &(r_nmda) - _p;  _dlist1[0] = &(Dr_nmda) - _p;
- _slist1[1] = &(r_ampa) - _p;  _dlist1[1] = &(Dr_ampa) - _p;
- _slist1[2] = &(Capoolcon) - _p;  _dlist1[2] = &(DCapoolcon) - _p;
 _first = 0;
 }
 

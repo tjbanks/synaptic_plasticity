@@ -1,2 +1,2 @@
-edge_type_id target_query source_query model_template distance_range dynamics_params delay target_sections syn_weight
-100 pop_name=='CA3e' pat=='pat1' pyr2pyr "[0.0, 300]" CA3e2CA3e.exc.json 0 ['soma'] 1
+edge_type_id target_query source_query target_sections syn_weight model_template distance_range dynamics_params delay
+100 pop_name=='CA3e' pat=='pat1' ['soma'] 4 pyr2pyr "[0.0, 300]" CA3e2CA3e.exc.json 0

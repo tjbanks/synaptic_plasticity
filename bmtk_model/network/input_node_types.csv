@@ -1,2 +1,2 @@
-node_type_id model_type pat pop_name
-100 virtual pat1 virt
+node_type_id pat pop_name model_type
+100 pat1 virt virtual

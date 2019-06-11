@@ -21,7 +21,7 @@ def build_hippocampus():
                     dynamics_params='CA3e2CA3e.exc.json',
                     model_template='pyr2pyr',
                     delay=0,
-                    syn_weight=1,
+                    syn_weight=4,
                     target_sections=['soma'],  # target soma
                     distance_range=[0.0, 300]
                     )
