@@ -18,8 +18,8 @@ def build_hippocampus():
     conn = inputnet.add_edges(target=net.nodes(pop_name='CA3e'),
                     source={'pat':'pat1'},
                     connection_rule=1,
-                    dynamics_params='CA3e2CA3e.exc.json',
-                    model_template='pyr2pyr',
+                    dynamics_params='stsp.json',
+                    model_template='Exp2Syn1_STSP',
                     delay=0,
                     syn_weight=4,
                     target_sections=['soma'],  # target soma

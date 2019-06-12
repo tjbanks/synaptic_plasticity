@@ -19,7 +19,14 @@
       "pop_name": "CA3e"
     }
   },
-  "inputs": {},
+  "inputs": {
+    "spikes_CA3e": {
+      "input_type": "spikes",
+      "module": "csv",
+      "input_file": "./input/input_spikes.csv",
+      "node_set": "input"
+    }
+  },
   "output": {
     "log_file": "log.txt",
     "output_dir": "./output",
