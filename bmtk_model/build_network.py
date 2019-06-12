@@ -21,7 +21,7 @@ def build_hippocampus():
                     dynamics_params='stsp.json',
                     model_template='Exp2Syn1_STSP',
                     delay=0,
-                    syn_weight=.2,
+                    syn_weight=.5,
                     target_sections=['soma'],  # target soma
                     distance_range=[0.0, 300]
                     )

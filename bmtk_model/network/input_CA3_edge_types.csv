@@ -1,2 +1,2 @@
-edge_type_id target_query source_query dynamics_params delay target_sections syn_weight distance_range model_template
-100 pop_name=='CA3e' pat=='pat1' stsp.json 0 ['soma'] 0.2 "[0.0, 300]" Exp2Syn1_STSP
+edge_type_id target_query source_query dynamics_params distance_range syn_weight delay target_sections model_template
+100 pop_name=='CA3e' pat=='pat1' stsp.json "[0.0, 300]" 0.5 0 ['soma'] Exp2Syn1_STSP

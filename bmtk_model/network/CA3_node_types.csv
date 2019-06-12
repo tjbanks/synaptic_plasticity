@@ -1,2 +1,2 @@
-node_type_id model_template morphology pop_name model_type
-100 hoc:Spikingcell blank.swc CA3e biophysical
+node_type_id model_template model_type pop_name morphology
+100 hoc:Spikingcell biophysical CA3e blank.swc
