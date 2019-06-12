@@ -1,10 +1,10 @@
-2019-06-12 10:57:56,992 [INFO] Created log file
-2019-06-12 10:57:57,110 [INFO] Building cells.
-2019-06-12 10:57:57,114 [INFO] Building recurrent connections
-2019-06-12 10:57:57,114 [INFO] Building virtual cell stimulations for spikes_CA3e
-2019-06-12 10:57:57,189 [INFO] Running simulation for 1000.000 ms with the time step 0.100 ms
-2019-06-12 10:57:57,189 [INFO] Starting timestep: 0 at t_sim: 0.000 ms
-2019-06-12 10:57:57,189 [INFO] Block save every 5000 steps
-2019-06-12 10:57:57,344 [INFO]     step:5000 t_sim:500.00 ms
-2019-06-12 10:57:57,500 [INFO]     step:10000 t_sim:1000.00 ms
-2019-06-12 10:57:57,602 [INFO] Simulation completed in 0.4134 seconds 
+2019-06-12 14:05:35,485 [INFO] Created log file
+2019-06-12 14:05:35,762 [INFO] Building cells.
+2019-06-12 14:05:35,766 [INFO] Building recurrent connections
+2019-06-12 14:05:35,766 [INFO] Building virtual cell stimulations for spikes_CA3e
+2019-06-12 14:05:35,966 [INFO] Running simulation for 1000.000 ms with the time step 0.100 ms
+2019-06-12 14:05:35,966 [INFO] Starting timestep: 0 at t_sim: 0.000 ms
+2019-06-12 14:05:35,966 [INFO] Block save every 5000 steps
+2019-06-12 14:05:36,179 [INFO]     step:5000 t_sim:500.00 ms
+2019-06-12 14:05:36,392 [INFO]     step:10000 t_sim:1000.00 ms
+2019-06-12 14:05:36,571 [INFO] Simulation completed in 0.605 seconds 

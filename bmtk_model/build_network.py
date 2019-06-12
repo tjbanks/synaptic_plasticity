@@ -9,7 +9,7 @@ def build_hippocampus():
     net.add_nodes(N=1,
                 pop_name='CA3e',
                 model_type = 'biophysical',
-                model_template='hoc:IzhiCell_CA3',
+                model_template='hoc:Spikingcell',
                 morphology='blank.swc'
                 )
 
@@ -21,7 +21,7 @@ def build_hippocampus():
                     dynamics_params='stsp.json',
                     model_template='Exp2Syn1_STSP',
                     delay=0,
-                    syn_weight=4,
+                    syn_weight=.2,
                     target_sections=['soma'],  # target soma
                     distance_range=[0.0, 300]
                     )

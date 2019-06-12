@@ -4,9 +4,9 @@ Sample python notebook demonstrating synaptic plasticity.
 
 Future repository will feature a python notebook to demonstrate the model, however python scripts do work as is.
 
-The bulk of the work is done by [pyr2pyr.mod](/bmtk_model/biophys_components/mechanisms/modfiles/pyr2pyr.mod)
+The bulk of the work is done by [exp2syn1_stsp.mod](/bmtk_model/biophys_components/mechanisms/modfiles/exp2syn1_stsp.mod)
 
-The network simply creates a virtual cell and connects it to a single target cell via pyr2pyr synapse. Parameters are found in the associated [CA3e2CA3e.exc.json](/bmtk_model/biophys_components/synaptic_models/CA3e2CA3e.exc.json) file.
+The network simply creates a virtual cell and connects it to a single target cell via Exp2Syn1_STSP synapse. Parameters are found in the associated [stsp.json](/bmtk_model/biophys_components/synaptic_models/stsp.json) file. Edit this file to adjust the effects of Facilitation and Depression (strength/tau)
 
 ### To run the network:
 

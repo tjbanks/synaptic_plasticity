@@ -41,9 +41,13 @@ STATE { g (microsiemens) }
 
 INITIAL { 
   g = 0 
- 
+   
   : short term facilitation and depression
-  tsyn = -1e30  
+  t0 = -1
+  tsyn = -1e30 
+  F = 0
+  D1 = 1
+  D2 = 1 
 }
 
 BREAKPOINT { 
@@ -51,20 +55,20 @@ BREAKPOINT {
   i = g*facfactor*(v - e)
 }
 
-DERIVATIVE state { g' = g/tau }
+DERIVATIVE state { g' = -g/tau }
 
 NET_RECEIVE(weight (microsiemens)) {
   
   g = g + weight :Original Exp2Syn1 way
   
   : short term faciliation and depression
-  t0 = 0
+  t0 = t
   
   F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)
   D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)
   D2 = 1 - (1-D2)*exp(-(t - tsyn)/tauD2)
   
-  tsyn = t0
+  tsyn = t
   
   facfactor = F * D1 * D2
   

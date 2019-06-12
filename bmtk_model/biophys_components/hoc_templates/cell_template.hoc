@@ -1,0 +1,60 @@
+begintemplate Spikingcell
+
+	public NumSoma
+	NumSoma = 1
+
+	public soma
+	create soma[NumSoma]
+
+	public all, somatic, basal, apical, axonal
+	objref all, somatic, basal, apical, axonal
+	objref this
+
+	public init
+
+	proc init() {
+		/////// topology ////////
+		//create soma[0]
+
+		all = new SectionList()
+		somatic = new SectionList()
+		basal = new SectionList()
+		apical = new SectionList()
+		axonal = new SectionList()
+
+		for i=0,NumSoma soma[i] {
+			all.append()
+			somatic.append()
+			} 
+		
+		/////// geometry ////////
+		soma[0] {nseg=1 L=1000 diam=10} // changed L & diam
+	
+		/////// biophysics ///////
+		soma[0] {
+			cm= 1		//(microF/cm2)
+			Ra= 1		//(ohm-cm)
+			
+		    // gives leak conductance of .03 mS/cm2
+			insert leak
+			eleak = -50 // (mV)
+			gbar_leak = .03e-3 // (siemens/cm2)
+			
+			/////////////////////////////////////////////////////////////////////////
+			// Use insert command to insert more channels here
+
+			///Spiking
+			insert na
+			ena = 50
+			gbar_na = .3 // (.1~.5 siemens/cm2)
+
+			insert kdr
+			ek = -80
+			gbar_kdr = .3 // (.1~.5 siemens/cm2)
+			/////////////////////////////////////////////////////////////////////////
+        }
+		define_shape()
+
+	}
+	
+endtemplate Spikingcell

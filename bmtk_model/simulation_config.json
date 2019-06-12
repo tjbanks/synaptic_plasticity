@@ -14,7 +14,7 @@
   },
   "conditions": {
     "celsius": 34.0,
-    "v_init": -80.0
+    "v_init": -50.0
   },
   "node_sets": {
     "virt_CA3": {
@@ -49,10 +49,10 @@
     },
     "syn_report": {
       "cells": "virt_CA3",
-      "variable_name": "i_ampa",
+      "variable_name": "i",
       "module": "netcon_report",
       "sections": "all",
-      "syn_type": "pyr2pyr"
+      "syn_type": "Exp2Syn1_STSP"
     }
   },
   "network": "./circuit_config.json"
