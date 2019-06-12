@@ -1,15 +1,18 @@
 # Short-Term Synaptic Plasticity (STSP) Demo
 
-Python notebook and NEURON code demonstrating short-term synaptic plasticity. 
+Python notebook and NEURON code explaining and demonstrating short-term synaptic plasticity. 
 
 ### Jupyter Notebook:
 
-[Static Viewer](https://nbviewer.jupyter.org/github/tjbanks/synaptic_plasticity/blob/master/SynapticPlasticity.ipynb)
+#### Static Viewer
 
-[Interactive Viewer](https://mybinder.org/v2/gh/tjbanks/synaptic_plasticity/master?filepath=SynapticPlasticity.ipynb)
+[Click here](https://nbviewer.jupyter.org/github/tjbanks/synaptic_plasticity/blob/master/SynapticPlasticity.ipynb)
+
+#### Dynamic Viewer
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tjbanks/synaptic_plasticity/master?filepath=SynapticPlasticity.ipynb)
 
 ### NEURON Model
 
 Implements STSP using NEURON and BMTK, located in the [bmtk_model](/bmtk_model) folder.
 
-![](/btmk_model/stsp.png)
+![](./bmtk_model/stsd.png)
