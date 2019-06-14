@@ -46,39 +46,37 @@ def n_tau(v=0.0):
 
 def plot_hh(C = 1, vNa = 45, vK = -82, vL = -59,
             gNa = 120, gK = 36, gL = 0.3, v_init = -70,
-            inj_amp = 10, inj_start = 50, inj_dur = 20, 
+            inj_amp = 10, inj_start = 50, inj_dur = 20,
             syn_rev=0, syn_tau=0.1, syn_weight=0.4, syn_times = [50.0],
             f=1, d1=1, d2=1, tauF=1,tauD1=1,tauD2=1,
-            tmin=0, tmax=100):
+            tmin=0, tmax=100, stsp=True):
 
     def I(t,amp,start,dur):
         return np.piecewise(t, [t<start, t>=start, t>=start+dur], [0,amp,0])
    
+    tsyn = -1000
+    F = 0
+    D1 = 1
+    D2 = 1
+    facfactor = 1
 
     def hh_eq(y,t,inj_amp,inj_start,inj_dur,syn_times):
-        dy = np.zeros((14,))
-        
-        facfactor = 1
+        dy = np.zeros((10,))
+       
+        nonlocal tsyn,F,D1,D2,facfactor
         
         Vm = y[0]
         m = y[1]
         h = y[2]
         n = y[3]
-        g_syn = y[8]
+        
+        t_last = y[7]
+        current_g_syn = y[8]
+        #print("Time: ", t, " gsyn: ",current_g_syn)
 
-        F = y[9]
-        D1 = y[10]
-        D2 = y[11]
-        tsyn = y[12]
-        t_last = y[13]
-
-        #print('\n')
-        #print(t_last)
-        #print(syn_times)
-        #print(t)
-        if True in [i > t_last and i < t for i in syn_times]:
-            #print(t)
-            g_syn = g_syn + syn_weight #Original
+        if True in [i >= t_last and i < t for i in syn_times]:
+            #print(current_g_syn)
+            current_g_syn = current_g_syn + syn_weight #Original
             # short term faciliation and depression
             
             F  = 1 + (F-1)* math.exp(-(t - tsyn)/tauF)
@@ -90,33 +88,28 @@ def plot_hh(C = 1, vNa = 45, vK = -82, vL = -59,
             facfactor = F * D1 * D2
             
             F = F * f 
-
             if F > 30:
-                F = 30
-                        
+                F = 30     
             D1 = D1 * d1
             D2 = D2 * d2
 
-            dy[12] = tsyn
+            #print(facfactor)
 
-        
+
+        if not stsp:
+            facfactor = 1
+
         i_Na = gNa*np.power(m,3)*h*(vNa - Vm)
         i_K =  gK*np.power(n,4)*(vK - Vm)
         i_L =  gL*(vL - Vm)
-        i_Syn = g_syn*facfactor*(syn_rev - Vm)
-
+        i_Syn = current_g_syn*facfactor*(syn_rev - Vm)
+        
         dy[0] = (i_Na + i_K + i_L + i_Syn + I(t,inj_amp,inj_start,inj_dur))/C
         dy[1] = (alpha_m(Vm) * (1.0 - m)) - (beta_m(Vm) * m)
         dy[2] = (alpha_h(Vm) * (1.0 - h)) - (beta_h(Vm) * h)
         dy[3] = (alpha_n(Vm) * (1.0 - n)) - (beta_n(Vm) * n)
         
-        dy[8] = -g_syn/syn_tau
-
-        dy[9] = F - y[9]
-        dy[10] = D1 - y[10]
-        dy[11] = D2 - y[11]
-        dy[12] = tsyn - y[12]
-        dy[13] = t - y[13]
+        
 
         # Convienient way of saving conductances
         dy[4] = i_Na - y[4]
@@ -125,6 +118,10 @@ def plot_hh(C = 1, vNa = 45, vK = -82, vL = -59,
         # Save the timestamps
         dy[7] = t - y[7]
 
+        dy[8] = -current_g_syn/syn_tau
+
+        dy[9] = i_Syn - y[9]
+        
         return dy
 
     inj_amp = 0 
@@ -132,9 +129,16 @@ def plot_hh(C = 1, vNa = 45, vK = -82, vL = -59,
     #inj_dur = 0
 
     t = np.linspace(tmin, tmax, 1000)
-    Y = np.array([v_init, m_inf(), h_inf(), n_inf(), 0, 0, 0, 0, 0, 0, 1, 1, -1e30, 0])
+    Y = np.array([v_init, m_inf(), h_inf(), n_inf(), 0, 0, 0, 0, 0, 0])
     v = odeint(hh_eq,Y,t,args=(inj_amp,inj_start,inj_dur,syn_times))
     
+    #def euler(method,Y,t_max,t_step,args=[]):
+    #    for i_t in range(0,t_max,t_step):
+    #        Y = method(Y,i_t,*args)
+    #        Y = Y + Y * t_step           
+
+    #v = euler(hh_eq,Y,tmax,.01,args=(inj_amp,inj_start,inj_dur,syn_times))
+
     f, ((ax1, ax2),(ax3, ax4)) = plt.subplots(2, 2, figsize=(12,12))
     ax1.plot(t,v[:,0])
     ax1.set(ylabel='v [mv]',xlabel='time [ms]')
@@ -167,4 +171,10 @@ def plot_hh(C = 1, vNa = 45, vK = -82, vL = -59,
     ax.plot(v[:, 0], v[:, 3], label='Vm - n')
     ax.set_title('Limit cycles')
     ax.legend()
+    plt.grid()
+
+    fig, axsyn = plt.subplots(figsize=(6, 6))
+    axsyn.plot(t, v[:, 9], label='Synapse 1')
+    axsyn.set_title('Synaptic Current')
+    axsyn.legend()
     plt.grid()
