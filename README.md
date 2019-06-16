@@ -6,10 +6,10 @@ Python notebook and NEURON code explaining and demonstrating short-term synaptic
 
 #### Static Viewer
 
-[Click here](https://nbviewer.jupyter.org/github/tjbanks/synaptic_plasticity/blob/master/SynapticPlasticity.ipynb)
+[Click here](https://nbviewer.jupyter.org/github/tjbanks/synaptic_plasticity/blob/master/ShortTermSynapticPlasticity.ipynb)
 
 #### Dynamic Viewer
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tjbanks/synaptic_plasticity/master?filepath=SynapticPlasticity.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tjbanks/synaptic_plasticity/master?filepath=ShortTermSynapticPlasticity.ipynb)
 
 ### NEURON Model
 
